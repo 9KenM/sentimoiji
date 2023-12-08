@@ -3,7 +3,7 @@ body {
 }
 
 #sentiment {
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">😃</text></svg>');
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="1em" font-size="90">😃</text></svg>');
     background-repeat: no-repeat;
     background-size: cover;
     width: 100px;
@@ -11,14 +11,108 @@ body {
     display: block;
 }
 
+#sentiment[data-sentiment="positive"],
 #sentiment[data-sentiment="pos"] {
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">😃</text></svg>');
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="1em" font-size="90">😃</text></svg>');
 }
 
+#sentiment[data-sentiment="neutral"],
 #sentiment[data-sentiment="neu"] {
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">😐</text></svg>');
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="1em" font-size="90">😐</text></svg>');
 }
 
+#sentiment[data-sentiment="negative"],
 #sentiment[data-sentiment="neg"] {
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">😔</text></svg>');
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="1em" font-size="90">😔</text></svg>');
+}
+
+#sentiment[data-sentiment="admiration"] {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="1em" font-size="90">😍</text></svg>');
+}
+
+#sentiment[data-sentiment="amusement"] {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="1em" font-size="90">😆</text></svg>');
+}
+
+#sentiment[data-sentiment="anger"] {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="1em" font-size="90">😡</text></svg>');
+}
+
+#sentiment[data-sentiment="annoyance"] {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="1em" font-size="90">😠</text></svg>');
+}
+
+#sentiment[data-sentiment="approval"] {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="1em" font-size="90">👍</text></svg>');
+}
+
+#sentiment[data-sentiment="caring"] {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="1em" font-size="90">🥰</text></svg>');
+}
+
+#sentiment[data-sentiment="confusion"] {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="1em" font-size="90">🤔</text></svg>');
+}
+
+#sentiment[data-sentiment="curiosity"] {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="1em" font-size="90">🤔</text></svg>');
+}
+
+#sentiment[data-sentiment="desire"] {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="1em" font-size="90">😏</text></svg>');
+}
+
+#sentiment[data-sentiment="disappointment"] {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="1em" font-size="90">😞</text></svg>');
+}
+#sentiment[data-sentiment="disapproval"] {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="1em" font-size="90">👎</text></svg>');
+}
+#sentiment[data-sentiment="disgust"] {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="1em" font-size="90">🤢</text></svg>');
+}
+#sentiment[data-sentiment="embarrassment"] {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="1em" font-size="90">😳</text></svg>');
+}
+#sentiment[data-sentiment="excitement"] {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="1em" font-size="90">😆</text></svg>');
+}
+#sentiment[data-sentiment="fear"] {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="1em" font-size="90">😨</text></svg>');
+}
+#sentiment[data-sentiment="gratitude"] {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="1em" font-size="90">🙏</text></svg>');
+}
+#sentiment[data-sentiment="grief"] {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="1em" font-size="90">😭</text></svg>');
+}
+#sentiment[data-sentiment="joy"] {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="1em" font-size="90">😂</text></svg>');
+}
+#sentiment[data-sentiment="love"] {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="1em" font-size="90">😍</text></svg>');
+}
+#sentiment[data-sentiment="nervousness"] {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="1em" font-size="90">😰</text></svg>');
+}
+#sentiment[data-sentiment="optimism"] {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="1em" font-size="90">😃</text></svg>');
+}
+#sentiment[data-sentiment="pride"] {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="1em" font-size="90">😊</text></svg>');
+}
+#sentiment[data-sentiment="realization"] {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="1em" font-size="90">🤔</text></svg>');
+}
+#sentiment[data-sentiment="relief"] {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="1em" font-size="90">😌</text></svg>');
+}
+#sentiment[data-sentiment="remorse"] {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="1em" font-size="90">😔</text></svg>');
+}
+#sentiment[data-sentiment="sadness"] {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="1em" font-size="90">😔</text></svg>');
+}
+#sentiment[data-sentiment="surprise"] {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="1em" font-size="90">😮</text></svg>');
 }
