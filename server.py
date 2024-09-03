@@ -48,7 +48,12 @@ def get_accurate_sentiment():
     
     text = data['text']
     result = accurate_analyze_sentiment(text)
-    return jsonify({'text': text, 'sentiment': result})
+    emoji = "😐"  # Neutral emoji as default
+    if result == "Positive":
+        emoji = "😊"
+    elif result == "Negative":
+        emoji = "😔"
+    return jsonify({'text': text, 'sentiment': result, 'emoji': emoji})
     
 
 @app.route('/fast-sentiment', methods=['POST'])
@@ -61,7 +66,12 @@ def get_fast_sentiment():
     text = data['text']
     result = fast_analyze_sentiment(text)
     
-    return jsonify({'text': text, 'sentiment': result})
+    emoji = "😐"  # Neutral emoji as default
+    if result == "Positive":
+        emoji = "😊"
+    elif result == "Negative":
+        emoji = "😔"
+    return jsonify({'text': text, 'sentiment': result, 'emoji': emoji})
 
 @app.route('/')
 def server_static_index():

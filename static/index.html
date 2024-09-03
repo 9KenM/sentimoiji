@@ -7,6 +7,7 @@
     <body>
         <textarea name="text" rows="10" cols="30" oninput="handleInput(event)"></textarea>
         <span id="sentiment" data-sentiment="neutral"></span>
+        <span id="emoji">😐</span>
     </body>
     <script>
 
@@ -37,6 +38,7 @@
                 if (xhr.readyState == 4 && xhr.status == 200) {
                     var response = JSON.parse(xhr.responseText);
                     document.getElementById("sentiment").dataset.sentiment = response.sentiment.toLowerCase();
+                    document.getElementById("emoji").textContent = response.emoji;
                 }
             }
         }
