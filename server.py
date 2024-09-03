@@ -16,29 +16,41 @@ def fast_analyze_sentiment(text):
     sentiment_scores = sid.polarity_scores(text)
     blob = TextBlob(text)
     
-    # Determine sentiment
-    if sentiment_scores['compound'] >= 0.05:
+    # Determine sentiment and emotion
+    if sentiment_scores['compound'] >= 0.5:
         sentiment = "Positive"
+        if blob.sentiment.subjectivity > 0.7:
+            emotion = "Excitement"
+        elif sentiment_scores['pos'] > 0.8:
+            emotion = "Joy"
+        else:
+            emotion = "Optimism"
+    elif sentiment_scores['compound'] >= 0.05:
+        sentiment = "Positive"
+        if blob.sentiment.subjectivity > 0.6:
+            emotion = "Amusement"
+        else:
+            emotion = "Approval"
+    elif sentiment_scores['compound'] <= -0.5:
+        sentiment = "Negative"
+        if blob.sentiment.subjectivity > 0.7:
+            emotion = "Anger"
+        elif sentiment_scores['neg'] > 0.8:
+            emotion = "Grief"
+        else:
+            emotion = "Sadness"
     elif sentiment_scores['compound'] <= -0.05:
         sentiment = "Negative"
+        if blob.sentiment.subjectivity > 0.6:
+            emotion = "Annoyance"
+        else:
+            emotion = "Disappointment"
     else:
         sentiment = "Neutral"
-    
-    # Determine emotion
-    if sentiment_scores['pos'] > 0.5:
-        if blob.sentiment.subjectivity > 0.7:
-            emotion = "Excited"
+        if blob.sentiment.subjectivity > 0.5:
+            emotion = "Confusion"
         else:
-            emotion = "Happy"
-    elif sentiment_scores['neg'] > 0.5:
-        if blob.sentiment.subjectivity > 0.7:
-            emotion = "Angry"
-        else:
-            emotion = "Sad"
-    elif sentiment_scores['neu'] > 0.5:
-        emotion = "Calm"
-    else:
-        emotion = "Mixed"
+            emotion = "Neutral"
     
     return sentiment, emotion
 
@@ -70,6 +82,31 @@ def accurate_analyze_sentiment(text):
         
         return sentiment, score
 
+def map_sentiment_to_emotion(sentiment, score):
+    if sentiment == "POS":
+        if score > 0.9:
+            return "Joy"
+        elif score > 0.7:
+            return "Excitement"
+        elif score > 0.5:
+            return "Optimism"
+        else:
+            return "Approval"
+    elif sentiment == "NEG":
+        if score > 0.9:
+            return "Anger"
+        elif score > 0.7:
+            return "Sadness"
+        elif score > 0.5:
+            return "Disappointment"
+        else:
+            return "Annoyance"
+    else:
+        if score > 0.7:
+            return "Confusion"
+        else:
+            return "Neutral"
+
 @app.route('/accurate-sentiment', methods=['POST'])
 def get_accurate_sentiment():
     data = request.get_json()
@@ -79,17 +116,12 @@ def get_accurate_sentiment():
     
     text = data['text']
     sentiment, score = accurate_analyze_sentiment(text)
-    
-    emotion = "Neutral"
-    if sentiment == "POS":
-        emotion = "Happy" if score < 0.8 else "Excited"
-    elif sentiment == "NEG":
-        emotion = "Sad" if score < 0.8 else "Angry"
+    emotion = map_sentiment_to_emotion(sentiment, score)
     
     emoji = {
-        "Happy": "😊", "Excited": "😃",
-        "Sad": "😔", "Angry": "😠",
-        "Neutral": "😐"
+        "Joy": "😂", "Excitement": "😆", "Optimism": "😃", "Approval": "👍",
+        "Anger": "😡", "Sadness": "😔", "Disappointment": "😞", "Annoyance": "😠",
+        "Confusion": "🤔", "Neutral": "😐"
     }[emotion]
     
     return jsonify({'text': text, 'sentiment': sentiment, 'emotion': emotion, 'score': score, 'emoji': emoji})
@@ -105,9 +137,9 @@ def get_fast_sentiment():
     sentiment, emotion = fast_analyze_sentiment(text)
     
     emoji = {
-        "Happy": "😊", "Excited": "😃",
-        "Sad": "😔", "Angry": "😠",
-        "Calm": "😌", "Mixed": "😕"
+        "Joy": "😂", "Excitement": "😆", "Optimism": "😃", "Approval": "👍",
+        "Amusement": "😄", "Anger": "😡", "Grief": "😭", "Sadness": "😔",
+        "Disappointment": "😞", "Annoyance": "😠", "Confusion": "🤔", "Neutral": "😐"
     }[emotion]
     
     return jsonify({'text': text, 'sentiment': sentiment, 'emotion': emotion, 'emoji': emoji})
