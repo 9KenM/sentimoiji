@@ -16,10 +16,13 @@
         </div>
     </div>
     <script>
+        const TYPING_PAUSE_MS = 300;
         const PLACEHOLDER = { emoji: "😐", name: "neutral face" };
 
         const input = document.getElementById("text-input");
+        let pauseId;
         let analyzing = false;
+        let changedWhileAnalyzing = false;
 
         function render({ emoji, name }) {
             document.getElementById("emoji").textContent = emoji;
@@ -27,7 +30,10 @@
         }
 
         async function analyze() {
-            if (analyzing) return;
+            if (analyzing) {
+                changedWhileAnalyzing = true;
+                return;
+            }
             const text = input.value.trim();
             if (!text) return render(PLACEHOLDER);
 
@@ -45,10 +51,16 @@
             } finally {
                 analyzing = false;
             }
-            if (input.value.trim() !== text) analyze();
+            if (changedWhileAnalyzing) {
+                changedWhileAnalyzing = false;
+                analyze();
+            }
         }
 
-        input.addEventListener("input", analyze);
+        input.addEventListener("input", () => {
+            clearTimeout(pauseId);
+            pauseId = setTimeout(analyze, TYPING_PAUSE_MS);
+        });
 
         render(PLACEHOLDER);
     </script>

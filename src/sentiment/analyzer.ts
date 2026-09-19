@@ -15,6 +15,8 @@ export interface DecisionModel {
 }
 
 export const MAX_OPTIONS_PER_CHOICE = 255;
+const EXAMPLES_PER_SUBGROUP = 4;
+const SUBGROUP_PROBABILITY_FLOOR = 0.05;
 
 const SUBGROUP_QUESTION = "subgroup";
 const SUBGROUP_INSTRUCTIONS =
@@ -33,23 +35,32 @@ function chunk<T>(items: T[], size: number): T[][] {
 }
 
 export function buildQuestions(catalog: Emoji[]): ChoiceQuestions {
-  const charactersBySubgroup: Record<string, string[]> = {};
-  for (const { subgroup, character } of catalog) {
-    (charactersBySubgroup[subgroup] ??= []).push(character);
+  const namesBySubgroup: Record<string, string[]> = {};
+  for (const { subgroup, name } of catalog) {
+    (namesBySubgroup[subgroup] ??= []).push(name);
   }
+  const subgroupExamples = Object.entries(namesBySubgroup).map(
+    ([subgroup, names]) => [
+      subgroup,
+      names.slice(0, EXAMPLES_PER_SUBGROUP).join(", "),
+    ],
+  );
 
   const emojiQuestions = chunk(catalog, MAX_OPTIONS_PER_CHOICE).map(
     (emojis, index) => [
       emojiQuestionName(index),
       choice(
         EMOJI_INSTRUCTIONS,
-        Object.fromEntries(emojis.map(({ character, name }) => [character, name])),
+        Object.fromEntries(emojis.map(({ name }) => [name, null])),
       ),
     ],
   );
 
   return {
-    [SUBGROUP_QUESTION]: choice(SUBGROUP_INSTRUCTIONS, charactersBySubgroup),
+    [SUBGROUP_QUESTION]: choice(
+      SUBGROUP_INSTRUCTIONS,
+      Object.fromEntries(subgroupExamples),
+    ),
     ...Object.fromEntries(emojiQuestions),
   };
 }
@@ -64,8 +75,8 @@ export function pickEmoji(
       Math.floor(index / MAX_OPTIONS_PER_CHOICE),
     );
     return (
-      subgroupProbabilities[emoji.subgroup] *
-      answers[questionName].probabilities[emoji.character]
+      (subgroupProbabilities[emoji.subgroup] + SUBGROUP_PROBABILITY_FLOOR) *
+      answers[questionName].probabilities[emoji.name]
     );
   });
   return catalog[likelihoods.indexOf(Math.max(...likelihoods))];

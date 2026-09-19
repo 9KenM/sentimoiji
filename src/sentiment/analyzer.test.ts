@@ -10,23 +10,34 @@ import type { DecisionModel } from "./analyzer.ts";
 
 const SUBGROUP_QUESTION = "subgroup";
 
-function modelFavouring(subgroup: string, character: string): DecisionModel {
+function modelFavouring(
+  subgroup: string,
+  emojiNames: string[],
+  otherProbability = 0.0001,
+): DecisionModel {
   return {
     async systemOne({ questions }) {
       const answers = Object.fromEntries(
         Object.entries(questions).map(([name, question]) => {
           const isSubgroupQuestion = name === SUBGROUP_QUESTION;
-          const favourite = isSubgroupQuestion ? subgroup : character;
+          const favourites = isSubgroupQuestion ? [subgroup] : emojiNames;
           const favouriteProbability = isSubgroupQuestion ? 0.9 : 0.5;
+          const options = Object.keys(question.criteria);
           const probabilities = Object.fromEntries(
-            Object.keys(question.criteria).map((option) => [
+            options.map((option) => [
               option,
-              option === favourite ? favouriteProbability : 0.0001,
+              favourites.includes(option) ? favouriteProbability : otherProbability,
             ]),
           );
+          const selected = options.find((option) => favourites.includes(option));
           return [
             name,
-            { type: "choice" as const, choice: favourite, confidence: 0.9, probabilities },
+            {
+              type: "choice" as const,
+              choice: selected ?? options[0],
+              confidence: 0.9,
+              probabilities,
+            },
           ];
         }),
       );
@@ -52,7 +63,7 @@ test("every emoji is offered exactly once within the Choice option limit", () =>
     Object.keys(criteria),
   );
 
-  assert.deepEqual(offered, emojiCatalog.map(({ character }) => character));
+  assert.deepEqual(offered, emojiCatalog.map(({ name }) => name));
   for (const { criteria } of [subgroupQuestion, ...Object.values(emojiQuestions)]) {
     assert.ok(Object.keys(criteria).length <= MAX_OPTIONS_PER_CHOICE);
   }
@@ -61,7 +72,7 @@ test("every emoji is offered exactly once within the Choice option limit", () =>
 test("picks the emoji favoured by both its subgroup and its own question", async () => {
   const rocket = emojiCatalog.find(({ character }) => character === "🚀")!;
   const analyze = createSentimentAnalyzer(
-    modelFavouring(rocket.subgroup, rocket.character),
+    modelFavouring(rocket.subgroup, [rocket.name]),
     emojiCatalog,
   );
 
@@ -70,10 +81,21 @@ test("picks the emoji favoured by both its subgroup and its own question", async
 
 test("a forced winner in an unlikely subgroup loses to a likelier subgroup", async () => {
   const flag = emojiCatalog.find(({ character }) => character === "🇯🇵")!;
+  const grin = emojiCatalog.find(({ character }) => character === "😀")!;
   const analyze = createSentimentAnalyzer(
-    modelFavouring("face-smiling", flag.character),
+    modelFavouring(grin.subgroup, [flag.name, grin.name]),
     emojiCatalog,
   );
 
-  assert.equal((await analyze("What a lovely day")).subgroup, "face-smiling");
+  assert.deepEqual(await analyze("What a lovely day"), grin);
+});
+
+test("a confidently wrong subgroup cannot zero out the favoured emoji", async () => {
+  const anguished = emojiCatalog.find(({ character }) => character === "😧")!;
+  const analyze = createSentimentAnalyzer(
+    modelFavouring("face-negative", [anguished.name], 0),
+    emojiCatalog,
+  );
+
+  assert.deepEqual(await analyze("This is the worst day of my life"), anguished);
 });
