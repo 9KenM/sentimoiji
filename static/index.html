@@ -3,47 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sentiment Analysis</title>
+    <title>Sentimoji</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <h1>Sentiment Analysis</h1>
+        <h1>Sentimoji</h1>
         <textarea id="text-input" rows="5" placeholder="Enter your text here..."></textarea>
         <div id="result">
-            <div id="sentiment" data-sentiment="neutral"></div>
-            <p id="emotion">Neutral</p>
+            <div id="emoji"></div>
+            <p id="emoji-name"></p>
         </div>
     </div>
     <script>
-        let timeoutId;
+        const PLACEHOLDER = { emoji: "😐", name: "neutral face" };
 
-        function handleInput() {
-            getSentiment('fast');
+        const input = document.getElementById("text-input");
+        let analyzing = false;
 
-            if(timeoutId) clearTimeout(timeoutId);
-
-            timeoutId = setTimeout(() => {
-                getSentiment('accurate');
-            }, 1000);
+        function render({ emoji, name }) {
+            document.getElementById("emoji").textContent = emoji;
+            document.getElementById("emoji-name").textContent = name;
         }
 
-        function getSentiment(type) {
-            const text = document.getElementById("text-input").value;
-            const xhr = new XMLHttpRequest();
-            xhr.open("POST", `/${type}-sentiment`, true);
-            xhr.setRequestHeader("Content-Type", "application/json");
-            xhr.send(JSON.stringify({text: text}));
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState == 4 && xhr.status == 200) {
-                    const response = JSON.parse(xhr.responseText);
-                    document.getElementById("sentiment").dataset.sentiment = response.sentiment.toLowerCase();
-                    document.getElementById("emotion").textContent = response.sentiment;
-                }
+        async function analyze() {
+            if (analyzing) return;
+            const text = input.value.trim();
+            if (!text) return render(PLACEHOLDER);
+
+            analyzing = true;
+            try {
+                const response = await fetch("/sentiment", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ text }),
+                });
+                const result = await response.json();
+                render(response.ok ? result : { emoji: "⚠️", name: result.error });
+            } catch (error) {
+                render({ emoji: "⚠️", name: error.message });
+            } finally {
+                analyzing = false;
             }
+            if (input.value.trim() !== text) analyze();
         }
 
-        document.getElementById("text-input").addEventListener("input", handleInput);
+        input.addEventListener("input", analyze);
+
+        render(PLACEHOLDER);
     </script>
 </body>
 </html>

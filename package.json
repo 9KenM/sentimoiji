@@ -1,0 +1,27 @@
+{
+  "name": "sentimoji",
+  "version": "2.0.0",
+  "description": "Maps the sentiment of text to any Unicode emoji using the Jev model",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "start": "node --env-file=.env src/server.ts",
+    "test": "node --test",
+    "typecheck": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/9KenM/sentimoiji.git"
+  },
+  "dependencies": {
+    "@typesafe-ai/sdk": "^0.6.0",
+    "emojibase-data": "^17.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.2",
+    "typescript": "^7.0.2"
+  }
+}
